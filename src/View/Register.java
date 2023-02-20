@@ -1,12 +1,21 @@
 
 package View;
 
+import Controller.SQLite;
+import Model.User;
+import java.util.ArrayList;
+
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
+    public SQLite sqlite;
     
     public Register() {
         initComponents();
+    }
+    
+    public void init(SQLite sqlite){
+        this.sqlite = sqlite;   
     }
 
     @SuppressWarnings("unchecked")
@@ -19,6 +28,7 @@ public class Register extends javax.swing.JPanel {
         backBtn = new javax.swing.JButton();
         passwordFld = new javax.swing.JPasswordField();
         confpassFld = new javax.swing.JPasswordField();
+        registerErrorMsg = new javax.swing.JLabel();
 
         registerBtn.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         registerBtn.setText("REGISTER");
@@ -56,18 +66,14 @@ public class Register extends javax.swing.JPanel {
         confpassFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         confpassFld.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "CONFIRM PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
 
+        registerErrorMsg.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        registerErrorMsg.setForeground(new java.awt.Color(255, 51, 0));
+        registerErrorMsg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(173, 173, 173)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(usernameFld)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
-                    .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(confpassFld, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(200, 200, 200))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -76,6 +82,15 @@ public class Register extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(backBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(173, 173, 173)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(registerErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(usernameFld, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                    .addComponent(passwordFld)
+                    .addComponent(confpassFld))
+                .addGap(200, 200, 200))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -92,13 +107,40 @@ public class Register extends javax.swing.JPanel {
                 .addComponent(confpassFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(registerErrorMsg)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerAction(usernameFld.getText(), String.valueOf(passwordFld.getPassword()), String.valueOf(confpassFld.getPassword()));
-        frame.loginNav();
+        String submittedUsername = usernameFld.getText();
+        String submittedPassword = String.valueOf(passwordFld.getPassword());  
+        String submittedConfPassword = String.valueOf(confpassFld.getPassword()); 
+        
+        
+        
+        // Validation
+        ArrayList<User> users = sqlite.getUsers();
+        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+            String name = users.get(nCtr).getUsername();
+            //String pw = users.get(nCtr).getPassword();
+            
+            
+            // Case 1: Empty Fields
+            if (submittedUsername.equals("") || submittedPassword.equals("") || submittedConfPassword.equals("")){
+                registerErrorMsg.setText("Registration Failed. All fields must not be empty.");
+                break;
+            }
+            // Case 2: Username already taken
+            else if(name.equals(submittedUsername)){
+                registerErrorMsg.setText("Registration Failed. Username already taken.");
+                break;
+            }
+        }
+
+        //frame.registerAction(usernameFld.getText(), String.valueOf(passwordFld.getPassword()), String.valueOf(confpassFld.getPassword()));
+        //frame.loginNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -112,6 +154,7 @@ public class Register extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPasswordField passwordFld;
     private javax.swing.JButton registerBtn;
+    private javax.swing.JLabel registerErrorMsg;
     private javax.swing.JTextField usernameFld;
     // End of variables declaration//GEN-END:variables
 }

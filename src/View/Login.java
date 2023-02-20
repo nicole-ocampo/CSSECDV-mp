@@ -10,14 +10,16 @@ public class Login extends javax.swing.JPanel {
     public Frame frame;
     public SQLite sqlite;
     
-    
     public Login() {
-        initComponents();   
+        initComponents();
     }
 
     public void init(SQLite sqlite){
-        logInErrorMsg.setVisible(false);
-        this.sqlite = sqlite;   
+        this.sqlite = sqlite;      
+    }
+    
+    public void reset(){
+        logInErrorMsg.setText("");
     }
     
     @SuppressWarnings("unchecked")
@@ -65,7 +67,6 @@ public class Login extends javax.swing.JPanel {
         logInErrorMsg.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         logInErrorMsg.setForeground(new java.awt.Color(255, 51, 0));
         logInErrorMsg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logInErrorMsg.setText("Login Failed. Invaild Username or Password");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -87,7 +88,7 @@ public class Login extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(96, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -99,7 +100,7 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logInErrorMsg)
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -111,20 +112,23 @@ public class Login extends javax.swing.JPanel {
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             String name = users.get(nCtr).getUsername();
             String pw = users.get(nCtr).getPassword();
-            
+                        
             if(name.equals(submittedUsername) && pw.equals(submittedPassword)){
-                logInErrorMsg.setVisible(true);
+                usernameFld.setText("");
+                passwordFld.setText("");
+                logInErrorMsg.setText("");
                 frame.mainNav();
             }
-            else
-                logInErrorMsg.setVisible(true);
+            else{
+                logInErrorMsg.setText("Login Failed. Invaild Username or Password");
+                break;
+            }
         }
 
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         frame.registerNav();
-        logInErrorMsg.setVisible(false);
     }//GEN-LAST:event_registerBtnActionPerformed
 
 

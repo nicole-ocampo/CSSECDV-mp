@@ -200,6 +200,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        loginPnl.reset();
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -225,6 +226,8 @@ public class Frame extends javax.swing.JFrame {
         registerPnl.frame = this;
         
         loginPnl.init(main.sqlite);
+        registerPnl.init(main.sqlite);
+        
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
         managerHomePnl.init(main.sqlite);
