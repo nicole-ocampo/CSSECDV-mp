@@ -10,6 +10,9 @@ public class Login extends javax.swing.JPanel {
     public Frame frame;
     public SQLite sqlite;
     
+    // additional Login variables
+    public int invalidAttempts = 0;
+    
     public Login() {
         initComponents();
     }
@@ -32,6 +35,7 @@ public class Login extends javax.swing.JPanel {
         registerBtn = new javax.swing.JButton();
         loginBtn = new javax.swing.JButton();
         logInErrorMsg = new javax.swing.JLabel();
+        lockedAccountMsg = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -84,11 +88,15 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(usernameFld)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(234, 234, 234))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(384, 384, 384)
+                .addComponent(lockedAccountMsg)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(96, Short.MAX_VALUE)
+                .addContainerGap(104, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -100,7 +108,9 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logInErrorMsg)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addComponent(lockedAccountMsg)
+                .addContainerGap(69, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -113,15 +123,26 @@ public class Login extends javax.swing.JPanel {
             String name = users.get(nCtr).getUsername();
             String pw = users.get(nCtr).getPassword();
                         
-            if(name.equals(submittedUsername) && pw.equals(submittedPassword)){
-                usernameFld.setText("");
-                passwordFld.setText("");
-                logInErrorMsg.setText("");
-                frame.mainNav();
-            }
-            else{
-                logInErrorMsg.setText("Login Failed. Invaild Username or Password");
-                break;
+            if(name.equals(submittedUsername)){
+                
+                if (pw.equals(submittedPassword)){
+                    usernameFld.setText("");
+                    passwordFld.setText("");
+                    logInErrorMsg.setText("");
+                    lockedAccountMsg.setText("");
+                    frame.mainNav();
+                } else if (!pw.equals(submittedPassword) && invalidAttempts < 3){
+                    logInErrorMsg.setText("Login Failed. Invalid Username or Password");
+                    invalidAttempts += 1;
+                    //lockedAccountMsg.setText(String.valueOf(invalidAttempts));
+                    break;
+                } else if (invalidAttempts == 3){
+                    users.get(nCtr).setLocked(1);
+                    users.get(nCtr).setRole(1);
+                    sqlite.updateLockedUser(name);
+                    lockedAccountMsg.setText("Invalid attempts exceeded. Account is currently locked.");
+                    break;
+                }
             }
         }
 
@@ -134,6 +155,7 @@ public class Login extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lockedAccountMsg;
     private javax.swing.JLabel logInErrorMsg;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPasswordField passwordFld;

@@ -197,6 +197,21 @@ public class SQLite {
         }
     }
     
+    public void updateLockedUser(String username){
+        String sql = "UPDATE users "
+                + "SET role = 1, "
+                + "locked = 1 "
+                + "WHERE username = '" + username 
+                + "';";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
     
     public ArrayList<History> getHistory(){
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
