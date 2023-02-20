@@ -18,6 +18,12 @@ public class Register extends javax.swing.JPanel {
         this.sqlite = sqlite;   
     }
 
+    public void reset(){
+        usernameFld.setText("");
+        passwordFld.setText("");
+        confpassFld.setText("");
+        registerErrorMsg.setText("");
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -124,8 +130,7 @@ public class Register extends javax.swing.JPanel {
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             String name = users.get(nCtr).getUsername();
-            //String pw = users.get(nCtr).getPassword();
-            
+            String pw = users.get(nCtr).getPassword();
             
             // Case 1: Empty Fields
             if (submittedUsername.equals("") || submittedPassword.equals("") || submittedConfPassword.equals("")){
@@ -135,6 +140,10 @@ public class Register extends javax.swing.JPanel {
             // Case 2: Username already taken
             else if(name.equals(submittedUsername)){
                 registerErrorMsg.setText("Registration Failed. Username already taken.");
+                break;
+            }
+            else if(!submittedPassword.equals(submittedConfPassword)){
+                registerErrorMsg.setText("Registration Failed. Passwords don't match.");
                 break;
             }
         }

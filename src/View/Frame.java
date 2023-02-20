@@ -257,6 +257,7 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void registerNav(){
+        registerPnl.reset();
         frameView.show(Container, "registerPnl");
     }
     
