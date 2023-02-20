@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="focusTraversalPolicyProvider" type="boolean" value="true"/>
+  </Properties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -31,7 +34,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="registerErrorMsg" max="32767" attributes="0"/>
                   <Component id="usernameFld" alignment="1" max="32767" attributes="0"/>
-                  <Component id="jLabel1" alignment="1" pref="395" max="32767" attributes="0"/>
+                  <Component id="jLabel1" alignment="1" max="32767" attributes="0"/>
                   <Component id="passwordFld" alignment="0" max="32767" attributes="0"/>
                   <Component id="confpassFld" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -55,8 +58,8 @@
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="registerBtn" min="-2" pref="52" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="registerErrorMsg" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="52" max="32767" attributes="0"/>
+              <Component id="registerErrorMsg" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -166,6 +169,13 @@
           <Color blue="0" green="33" red="ff" type="rgb"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[0, 0]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="null"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

@@ -36,6 +36,8 @@ public class Register extends javax.swing.JPanel {
         confpassFld = new javax.swing.JPasswordField();
         registerErrorMsg = new javax.swing.JLabel();
 
+        setFocusTraversalPolicyProvider(true);
+
         registerBtn.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         registerBtn.setText("REGISTER");
         registerBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -75,6 +77,9 @@ public class Register extends javax.swing.JPanel {
         registerErrorMsg.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         registerErrorMsg.setForeground(new java.awt.Color(255, 51, 0));
         registerErrorMsg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        registerErrorMsg.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        registerErrorMsg.setMaximumSize(new java.awt.Dimension(0, 0));
+        registerErrorMsg.setPreferredSize(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -93,7 +98,7 @@ public class Register extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(registerErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(usernameFld, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(passwordFld)
                     .addComponent(confpassFld))
                 .addGap(200, 200, 200))
@@ -114,8 +119,8 @@ public class Register extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(registerErrorMsg)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addComponent(registerErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -125,12 +130,10 @@ public class Register extends javax.swing.JPanel {
         String submittedConfPassword = String.valueOf(confpassFld.getPassword()); 
         
         
-        
         // Validation
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             String name = users.get(nCtr).getUsername();
-            String pw = users.get(nCtr).getPassword();
             
             // Case 1: Empty Fields
             if (submittedUsername.equals("") || submittedPassword.equals("") || submittedConfPassword.equals("")){
@@ -142,8 +145,15 @@ public class Register extends javax.swing.JPanel {
                 registerErrorMsg.setText("Registration Failed. Username already taken.");
                 break;
             }
+            // Case 3: Password and Confirmation Password don't match
             else if(!submittedPassword.equals(submittedConfPassword)){
                 registerErrorMsg.setText("Registration Failed. Passwords don't match.");
+                break;
+            }
+            // Case 4: Add password restrictions
+            else if(!submittedPassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")){
+                registerErrorMsg.setText("Registration Failed. Password must be at least 8 characters and contain at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, and at least 1 special character.");
+                
                 break;
             }
         }
