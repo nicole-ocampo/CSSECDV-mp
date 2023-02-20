@@ -86,6 +86,7 @@ public class SQLite {
             + " username TEXT NOT NULL UNIQUE,\n"
             + " password TEXT NOT NULL,\n"
             + " role INTEGER DEFAULT 2,\n"
+            + " salt TEXT NOT NULL, \n"
             + " locked INTEGER DEFAULT 0\n"
             + ");";
 
@@ -179,8 +180,8 @@ public class SQLite {
         }
     }
     
-    public void addUser(String username, String password) {
-        String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+    public void addUser(String username, String password, String salt) {
+        String sql = "INSERT INTO users(username,password,salt) VALUES('" + username + "','" + password + "','" + salt + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
@@ -276,7 +277,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, password, role, locked FROM users";
+        String sql = "SELECT id, username, password, role, salt, locked FROM users";
         ArrayList<User> users = new ArrayList<User>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -288,14 +289,15 @@ public class SQLite {
                                    rs.getString("username"),
                                    rs.getString("password"),
                                    rs.getInt("role"),
+                                   rs.getString("salt"),
                                    rs.getInt("locked")));
             }
         } catch (Exception ex) {}
         return users;
     }
     
-    public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
+    public void addUser(String username, String password, int role, String salt) {
+        String sql = "INSERT INTO users(username,password,role,salt) VALUES('" + username + "','" + password + "','" + role + "','" + salt + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){

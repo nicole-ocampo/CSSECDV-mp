@@ -2,6 +2,8 @@
 package View;
 
 import Controller.SQLite;
+import Controller.PasswordHashing;
+
 import Model.User;
 import java.util.ArrayList;
 
@@ -18,7 +20,46 @@ public class Login extends javax.swing.JPanel {
     }
 
     public void init(SQLite sqlite){
-        this.sqlite = sqlite;      
+        this.sqlite = sqlite;
+        
+        // Add sample users
+//        String salt = PasswordHashing.getSaltvalue(30);
+//        String hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        sqlite.addUser("admin", hashedPw, 5, salt);
+//        
+//        salt = PasswordHashing.getSaltvalue(30);
+//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        
+//        sqlite.addUser("manager", hashedPw, 4, salt);
+//        
+//        salt = PasswordHashing.getSaltvalue(30);
+//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        
+//        sqlite.addUser("staff", hashedPw, 3, salt);
+//        
+//        salt = PasswordHashing.getSaltvalue(30);
+//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        
+//        sqlite.addUser("client1", hashedPw, 2, salt);
+//        
+//        salt = PasswordHashing.getSaltvalue(30);
+//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        
+//        sqlite.addUser("client2", hashedPw, 2, salt);
+
+        // Get current users
+//        ArrayList<User> users = sqlite.getUsers();
+//        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+//            String name = users.get(nCtr).getUsername();
+//            String pw = users.get(nCtr).getPassword();
+//            int lockedValue = users.get(nCtr).getLocked();
+//            
+//            System.out.println(name);
+//            System.out.println(pw);
+//            System.out.println(lockedValue);
+//        
+//            System.out.println("");
+//        }
     }
     
     public void reset(){
@@ -122,16 +163,29 @@ public class Login extends javax.swing.JPanel {
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             String name = users.get(nCtr).getUsername();
             String pw = users.get(nCtr).getPassword();
-                        
-            if(name.equals(submittedUsername)){
+            String salt = users.get(nCtr).getSalt();
+            int lockedValue = users.get(nCtr).getLocked();
+            
+            if (submittedUsername.equals("") || submittedPassword.equals("")){
+                logInErrorMsg.setText("Login Failed. All fields must not be empty.");
+                break;
+            }
+
+            if(name.equalsIgnoreCase(submittedUsername)){
+                if (lockedValue == 1){
+                    logInErrorMsg.setText("User is locked.");
+                    break;
+                }
+
+                boolean verifiedPw = PasswordHashing.verifyPassword(submittedPassword, pw, salt);
                 
-                if (pw.equals(submittedPassword)){
+                if (verifiedPw){
                     usernameFld.setText("");
                     passwordFld.setText("");
                     logInErrorMsg.setText("");
                     lockedAccountMsg.setText("");
                     frame.mainNav();
-                } else if (!pw.equals(submittedPassword) && invalidAttempts < 3){
+                } else if (!verifiedPw && invalidAttempts < 3){
                     logInErrorMsg.setText("Login Failed. Invalid Username or Password");
                     invalidAttempts += 1;
                     //lockedAccountMsg.setText(String.valueOf(invalidAttempts));

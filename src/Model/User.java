@@ -5,6 +5,7 @@ public class User {
     private String username;
     private String password;
     private int role = 2;
+    private String salt;
     private int locked = 0;
 
     public User(String username, String password){
@@ -12,11 +13,12 @@ public class User {
         this.password = password;
     }
     
-    public User(int id, String username, String password, int role, int locked){
+    public User(int id, String username, String password, int role, String salt, int locked){
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.salt = salt;
         this.locked = locked;
     }
     
@@ -50,6 +52,14 @@ public class User {
 
     public void setRole(int role) {
         this.role = role;
+    }
+    
+    public String getSalt(){
+        return salt;
+    }
+    
+    public void setSalt(String salt){
+        this.salt = salt;
     }
 
     public int getLocked() {

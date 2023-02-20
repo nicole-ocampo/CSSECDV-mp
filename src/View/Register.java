@@ -2,6 +2,8 @@
 package View;
 
 import Controller.SQLite;
+import Controller.PasswordHashing;
+
 import Model.User;
 import java.util.ArrayList;
 
@@ -141,7 +143,7 @@ public class Register extends javax.swing.JPanel {
                 break;
             }
             // Case 2: Username already taken
-            else if(name.equals(submittedUsername)){
+            else if(name.equalsIgnoreCase(submittedUsername)){
                 registerErrorMsg.setText("Registration Failed. Username already taken.");
                 break;
             }
@@ -153,13 +155,20 @@ public class Register extends javax.swing.JPanel {
             // Case 4: Add password restrictions
             else if(!submittedPassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")){
                 registerErrorMsg.setText("Registration Failed. Password must be at least 8 characters and contain at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, and at least 1 special character.");
-                
                 break;
             }
+            // Case 5: Register successful.
+            else{
+                String salt = PasswordHashing.getSaltvalue(30);
+                String hashedPw = PasswordHashing.generateSecurePassword(submittedPassword, salt);
+                
+                frame.registerAction(submittedUsername, hashedPw, salt);
+                frame.loginNav();
+            }
+            
         }
 
-        //frame.registerAction(usernameFld.getText(), String.valueOf(passwordFld.getPassword()), String.valueOf(confpassFld.getPassword()));
-        //frame.loginNav();
+        
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
