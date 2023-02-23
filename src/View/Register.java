@@ -130,42 +130,51 @@ public class Register extends javax.swing.JPanel {
         String submittedUsername = usernameFld.getText();
         String submittedPassword = String.valueOf(passwordFld.getPassword());  
         String submittedConfPassword = String.valueOf(confpassFld.getPassword()); 
+        boolean requirementsClear = false;
         
         
         // Validation
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             String name = users.get(nCtr).getUsername();
+            requirementsClear = false;
             
             // Case 1: Empty Fields
             if (submittedUsername.equals("") || submittedPassword.equals("") || submittedConfPassword.equals("")){
+                requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. All fields must not be empty.");
                 break;
             }
             // Case 2: Username already taken
             else if(name.equalsIgnoreCase(submittedUsername)){
+                requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. Username already taken.");
                 break;
             }
             // Case 3: Password and Confirmation Password don't match
             else if(!submittedPassword.equals(submittedConfPassword)){
+                requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. Passwords don't match.");
                 break;
             }
             // Case 4: Add password restrictions
             else if(!submittedPassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")){
+                requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. Password must be at least 8 characters and contain at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, and at least 1 special character.");
                 break;
             }
             // Case 5: Register successful.
             else{
-                String salt = PasswordHashing.getSaltvalue(30);
-                String hashedPw = PasswordHashing.generateSecurePassword(submittedPassword, salt);
-                
-                frame.registerAction(submittedUsername, hashedPw, salt);
-                frame.loginNav();
+                requirementsClear = true;
             }
-            
+        }
+        
+        if(requirementsClear){
+            String salt = PasswordHashing.getSaltvalue(30);
+            String hashedPw = PasswordHashing.generateSecurePassword(submittedPassword, salt);
+
+            frame.registerAction(submittedUsername, hashedPw, salt);
+            frame.loginNav();
         }
 
         

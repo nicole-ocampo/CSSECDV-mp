@@ -262,6 +262,7 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void registerAction(String username, String password, String salt){
+        loginPnl.registerSuccess();
         main.sqlite.addUser(username, password, salt);
     }
 
