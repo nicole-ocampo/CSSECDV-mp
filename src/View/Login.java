@@ -7,6 +7,11 @@ import Controller.PasswordHashing;
 import Model.User;
 import java.util.ArrayList;
 
+import java.text.DateFormat;  
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
+import java.util.Calendar;  
+
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
@@ -174,7 +179,7 @@ public class Login extends javax.swing.JPanel {
                 if (lockedValue == 1){
                     usernameFld.setText("");
                     passwordFld.setText("");
-                    logInErrorMsg.setText("User is locked.");
+                    logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
                     break;
                 }
 
@@ -186,18 +191,37 @@ public class Login extends javax.swing.JPanel {
                     logInErrorMsg.setText("");
                     frame.mainNav();
                 } else if (!verifiedPw && invalidAttempts < 3){
+                    
+                    // logging for invalid passwords
+                    String event = "NOTICE";
+                    String description = name + " submitted the wrong password.";
+                    Date date = new Date();  
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+                    String strDate = formatter.format(date); 
+                    sqlite.addLogs(event, name, description , strDate);
+                    //System.out.println(strDate);
+                    
                     usernameFld.setText("");
                     passwordFld.setText("");
                     logInErrorMsg.setText("Login Failed. Invalid Username or Password");
                     invalidAttempts += 1;
                     break;
                 } else if (invalidAttempts == 3){
+                    
+                    // logging for locked accounts
+                    String event = "WARNING";
+                    String description = name + " exceeded the number of invalid attempts. Account is now locked.";
+                    Date date = new Date();  
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+                    String strDate = formatter.format(date); 
+                    sqlite.addLogs(event, name, description , strDate);
+                    
                     usernameFld.setText("");
                     passwordFld.setText("");
                     users.get(nCtr).setLocked(1);
                     users.get(nCtr).setRole(1);
                     sqlite.updateLockedUser(name);
-                    logInErrorMsg.setText("Invalid attempts exceeded. Account is currently locked.");
+                    logInErrorMsg.setText("Invalid attempts exceeded. Account is locked.");
                     break;
                 }
             }
