@@ -27,40 +27,101 @@ public class Login extends javax.swing.JPanel {
     public void init(SQLite sqlite){
         this.sqlite = sqlite;
         
-        // Add sample users
+        // Add sample users      
+//        // admin
 //        String salt = PasswordHashing.getSaltvalue(30);
 //        String hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
-//        sqlite.addUser("admin", hashedPw, 5, salt);
 //        
+//        String saltSq1 = PasswordHashing.getSaltvalue(30);
+//        String hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
+//        
+//        String saltSq2 = PasswordHashing.getSaltvalue(30);
+//        String hashedSq2 = PasswordHashing.generateSecurePassword("lily", saltSq2);
+//        
+//        String saltSq3 = PasswordHashing.getSaltvalue(30);
+//        String hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
+//        
+//        sqlite.addUser("admin", hashedPw, 5, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
+//
+//        // manager
 //        salt = PasswordHashing.getSaltvalue(30);
 //        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
 //        
-//        sqlite.addUser("manager", hashedPw, 4, salt);
+//        saltSq1 = PasswordHashing.getSaltvalue(30);
+//        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
 //        
+//        saltSq2 = PasswordHashing.getSaltvalue(30);
+//        hashedSq2 = PasswordHashing.generateSecurePassword("lily", saltSq2);
+//        
+//        saltSq3 = PasswordHashing.getSaltvalue(30);
+//        hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
+//        
+//        sqlite.addUser("manager", hashedPw, 4, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
+//
+//        // staff
 //        salt = PasswordHashing.getSaltvalue(30);
 //        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
 //        
-//        sqlite.addUser("staff", hashedPw, 3, salt);
+//        saltSq1 = PasswordHashing.getSaltvalue(30);
+//        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
 //        
+//        saltSq2 = PasswordHashing.getSaltvalue(30);
+//        hashedSq2 = PasswordHashing.generateSecurePassword("lily", saltSq2);
+//        
+//        saltSq3 = PasswordHashing.getSaltvalue(30);
+//        hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
+//        
+//        sqlite.addUser("staff", hashedPw, 3, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
+//
+//        
+//        // client1
 //        salt = PasswordHashing.getSaltvalue(30);
 //        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
 //        
-//        sqlite.addUser("client1", hashedPw, 2, salt);
+//        saltSq1 = PasswordHashing.getSaltvalue(30);
+//        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
 //        
+//        saltSq2 = PasswordHashing.getSaltvalue(30);
+//        hashedSq2 = PasswordHashing.generateSecurePassword("lily", saltSq2);
+//        
+//        saltSq3 = PasswordHashing.getSaltvalue(30);
+//        hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
+//        
+//        sqlite.addUser("client1", hashedPw, 2, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
+//
+//
+//        // client2
 //        salt = PasswordHashing.getSaltvalue(30);
 //        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
 //        
-//        sqlite.addUser("client2", hashedPw, 2, salt);
+//        saltSq1 = PasswordHashing.getSaltvalue(30);
+//        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
+//        
+//        saltSq2 = PasswordHashing.getSaltvalue(30);
+//        hashedSq2 = PasswordHashing.generateSecurePassword("lily", saltSq2);
+//        
+//        saltSq3 = PasswordHashing.getSaltvalue(30);
+//        hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
+//        
+//        sqlite.addUser("client2", hashedPw, 2, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
+
 
         // Get current users
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             String name = users.get(nCtr).getUsername();
             String pw = users.get(nCtr).getPassword();
+            String sq1 = users.get(nCtr).getSq1();
+            String sq2 = users.get(nCtr).getSq2();
+            String sq3 = users.get(nCtr).getSq3();
+            
             int lockedValue = users.get(nCtr).getLocked();
             
             System.out.println(name);
             System.out.println(pw);
+            System.out.println(sq1);
+            System.out.println(sq2);
+            System.out.println(sq3);
             System.out.println(lockedValue);
         
             System.out.println("");
@@ -68,11 +129,17 @@ public class Login extends javax.swing.JPanel {
     }
     
     public void reset(){
+        usernameFld.setText("");
+        passwordFld.setText("");
         logInErrorMsg.setText("");
     }
     
     public void registerSuccess(){
         logInErrorMsg.setText("Registration successful. You may now log in.");
+    }
+    
+    public void changeSuccess(){
+        logInErrorMsg.setText("Change password successful. You may now log in.");
     }
     
     @SuppressWarnings("unchecked")
@@ -84,6 +151,7 @@ public class Login extends javax.swing.JPanel {
         passwordFld = new javax.swing.JPasswordField();
         registerBtn = new javax.swing.JButton();
         loginBtn = new javax.swing.JButton();
+        forgetBtn = new javax.swing.JButton();
         logInErrorMsg = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
@@ -119,6 +187,16 @@ public class Login extends javax.swing.JPanel {
             }
         });
 
+        forgetBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        forgetBtn.setForeground(new java.awt.Color(255, 102, 102));
+        forgetBtn.setText("FORGOT PASSWORD");
+        forgetBtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 153, 153), 2));
+        forgetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forgetBtnActionPerformed(evt);
+            }
+        });
+
         logInErrorMsg.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         logInErrorMsg.setForeground(new java.awt.Color(255, 51, 0));
         logInErrorMsg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -132,18 +210,20 @@ public class Login extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logInErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(usernameFld)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(forgetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(234, 234, 234))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(104, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -153,15 +233,20 @@ public class Login extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(logInErrorMsg)
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(forgetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(logInErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         String submittedUsername = usernameFld.getText();
         String submittedPassword = String.valueOf(passwordFld.getPassword());  
         
+        if (submittedUsername.equals("") || submittedPassword.equals(""))
+            logInErrorMsg.setText("Login Failed. All fields must not be empty.");
+    
         // Validation
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
@@ -233,8 +318,13 @@ public class Login extends javax.swing.JPanel {
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
+    private void forgetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgetBtnActionPerformed
+        frame.forgetNav();
+    }//GEN-LAST:event_forgetBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton forgetBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel logInErrorMsg;
     private javax.swing.JButton loginBtn;

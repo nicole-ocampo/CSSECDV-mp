@@ -207,6 +207,9 @@ public class Frame extends javax.swing.JFrame {
     public Main main;
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
+    public ForgetPassword forgetPnl = new ForgetPassword();
+    public ChangePassword changePnl = new ChangePassword();
+    
     
     private AdminHome adminHomePnl = new AdminHome();
     private ManagerHome managerHomePnl = new ManagerHome();
@@ -224,9 +227,13 @@ public class Frame extends javax.swing.JFrame {
         this.main = controller;
         loginPnl.frame = this;
         registerPnl.frame = this;
+        forgetPnl.frame = this;
+        changePnl.frame = this;
         
         loginPnl.init(main.sqlite);
         registerPnl.init(main.sqlite);
+        forgetPnl.init(main.sqlite);
+        changePnl.init(main.sqlite);
         
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
@@ -236,6 +243,8 @@ public class Frame extends javax.swing.JFrame {
         Container.setLayout(frameView);
         Container.add(loginPnl, "loginPnl");
         Container.add(registerPnl, "registerPnl");
+        Container.add(forgetPnl, "forgetPnl");
+        Container.add(changePnl, "changePnl");
         Container.add(HomePnl, "homePnl");
         frameView.show(Container, "loginPnl");
         
@@ -253,6 +262,7 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void loginNav(){
+        loginPnl.reset();
         frameView.show(Container, "loginPnl");
     }
     
@@ -261,9 +271,26 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "registerPnl");
     }
     
-    public void registerAction(String username, String password, String salt){
+    public void forgetNav(){
+        forgetPnl.reset();
+        frameView.show(Container, "forgetPnl");
+    }
+    
+    public void changeNav(String currentUser){
+        changePnl.reset();
+        changePnl.setCurrentUser(currentUser);
+        frameView.show(Container, "changePnl");
+    }
+        
+    public void registerAction(String username, String password, String salt, String sq1, String sq2, String sq3, String saltsq1, String saltsq2, String saltsq3){
         loginPnl.registerSuccess();
-        main.sqlite.addUser(username, password, salt);
+        main.sqlite.addUser(username, password, salt, sq1, sq2, sq3, saltsq1, saltsq2, saltsq3);
+        frameView.show(Container, "loginPnl");
+    }
+    
+    public void changePwSuccess(){
+        loginPnl.changeSuccess();
+        frameView.show(Container, "loginPnl");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

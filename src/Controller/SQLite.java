@@ -87,6 +87,12 @@ public class SQLite {
             + " password TEXT NOT NULL,\n"
             + " role INTEGER DEFAULT 2,\n"
             + " salt TEXT NOT NULL, \n"
+            + " SQ1 TEXT NOT NULL, \n"
+            + " SQ2 TEXT NOT NULL, \n"
+            + " SQ3 TEXT NOT NULL, \n"
+            + " saltSq1 TEXT NOT NULL, \n"
+            + " saltSq2 TEXT NOT NULL, \n"
+            + " saltSq3 TEXT NOT NULL, \n"
             + " locked INTEGER DEFAULT 0\n"
             + ");";
 
@@ -180,8 +186,8 @@ public class SQLite {
         }
     }
     
-    public void addUser(String username, String password, String salt) {
-        String sql = "INSERT INTO users(username,password,salt) VALUES('" + username + "','" + password + "','" + salt + "')";
+    public void addUser(String username, String password, String salt, String sq1, String sq2, String sq3, String saltsq1, String saltsq2, String saltsq3) {
+        String sql = "INSERT INTO users(username,password,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + salt + "','" + sq1 + "','"  + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
@@ -202,6 +208,38 @@ public class SQLite {
         String sql = "UPDATE users "
                 + "SET role = 1, "
                 + "locked = 1 "
+                + "WHERE username = '" + username 
+                + "';";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void updateUnlockUser(String username){
+        String sql = "UPDATE users "
+                + "SET role = 2, "
+                + "locked = 0 "
+                + "WHERE username = '" + username 
+                + "';";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void updatePassword(String pw, String salt, String username){
+        String sql = "UPDATE users "
+                + "SET password = '" + pw + "'"
+                + ", salt = '" + salt + "'"
                 + "WHERE username = '" + username 
                 + "';";
         
@@ -277,7 +315,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, password, role, salt, locked FROM users";
+        String sql = "SELECT id, username, password, role, salt, SQ1, SQ2, SQ3, saltSq1, saltSq2, saltSq3, locked FROM users";
         ArrayList<User> users = new ArrayList<User>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -290,19 +328,54 @@ public class SQLite {
                                    rs.getString("password"),
                                    rs.getInt("role"),
                                    rs.getString("salt"),
+                                   rs.getString("SQ1"),
+                                   rs.getString("SQ2"),
+                                   rs.getString("SQ3"),
+                                   rs.getString("saltSq1"),
+                                   rs.getString("saltSq2"),
+                                   rs.getString("saltSq3"),
                                    rs.getInt("locked")));
             }
         } catch (Exception ex) {}
         return users;
     }
     
-    public void addUser(String username, String password, int role, String salt) {
-        String sql = "INSERT INTO users(username,password,role,salt) VALUES('" + username + "','" + password + "','" + role + "','" + salt + "')";
+     public User getUserWhere(String currentUser){
+        String sql = "SELECT id, username, password, role, salt, SQ1, SQ2, SQ3, saltSq1, saltSq2, saltSq3, locked FROM users WHERE username ='" + currentUser + "';";
+        User user = null;
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+            
+            user = new User(rs.getInt("id"),
+                             rs.getString("username"),
+                             rs.getString("password"),
+                             rs.getInt("role"),
+                             rs.getString("salt"),
+                             rs.getString("SQ1"),
+                             rs.getString("SQ2"),
+                             rs.getString("SQ3"),
+                             rs.getString("saltSq1"),
+                             rs.getString("saltSq2"),
+                             rs.getString("saltSq3"),
+                             rs.getInt("locked"));
+            }
+        catch (Exception ex) {
+            System.out.print(ex);
+        }
+        
+        return user;
+    }
+
+    
+    public void addUser(String username, String password, int role, String salt, String sq1, String sq2, String sq3, String saltsq1, String saltsq2, String saltsq3) {
+        String sql = "INSERT INTO users(username,password,role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + role + "','" + salt + "','" + sq1 + "','" + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
-            
+            System.out.println("Sample User Added");
         } catch (Exception ex) {
             System.out.print(ex);
         }
