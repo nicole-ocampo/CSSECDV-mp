@@ -180,6 +180,11 @@ public class Register extends javax.swing.JPanel {
         String submittedSq2 = String.valueOf(sqFld2.getPassword()); 
         String submittedSq3 = String.valueOf(sqFld3.getPassword()); 
         
+        // rules for inputs
+        String usernameRules = "[a-zA-Z0-9]*";
+        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+        String sqRules = "[a-zA-Z0-9]*";
+        
         boolean requirementsClear = false;
         
         if (submittedUsername.equals("") || submittedPassword.equals("") || submittedConfPassword.equals("") || submittedSq1.equals("") || submittedSq2.equals("") || submittedSq3.equals("") ){
@@ -200,25 +205,36 @@ public class Register extends javax.swing.JPanel {
                 registerErrorMsg.setText("Registration Failed. All fields must not be empty.");
                 break;
             }
-            // Case 2: Username already taken
+            // Case 2: Add username restrictions
+            else if(!submittedUsername.matches(usernameRules)){
+                requirementsClear = false;
+                registerErrorMsg.setText("Registration Failed. Username can only contain a combination of letters and digits.");
+                break;
+            }
+            // Case 3: Username already taken
             else if(name.equalsIgnoreCase(submittedUsername)){
                 requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. Username already taken.");
                 break;
             }
-            // Case 3: Password and Confirmation Password don't match
+            // Case 4: Password and Confirmation Password don't match
             else if(!submittedPassword.equals(submittedConfPassword)){
                 requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. Passwords don't match.");
                 break;
             }
-            // Case 4: Add password restrictions
-            else if(!submittedPassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")){
+            // Case 5: Add password and confirm password restrictions
+            else if(!submittedPassword.matches(passwordRules) || !submittedConfPassword.matches(passwordRules)){
                 requirementsClear = false;
                 registerErrorMsg.setText("Registration Failed. Password must be at least 8 characters and contain at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, and at least 1 special character.");
                 break;
             }
-            // Case 5: Register successful.
+            // Case 6: Add security questions restrictions
+            else if (!submittedSq1.matches(sqRules) || !submittedSq2.matches(sqRules) || !submittedSq3.matches(sqRules)){
+                requirementsClear = false;
+                registerErrorMsg.setText("Registration Failed. Invalid input for security questions.");
+            }
+            // Case 7: Register successful.
             else{
                 requirementsClear = true;
             }

@@ -142,6 +142,39 @@ public class Login extends javax.swing.JPanel {
         logInErrorMsg.setText("Change password successful. You may now log in.");
     }
     
+    public void logAttempt(String name, int attemptValue){
+        Date date = new Date();  
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+        String strDate = formatter.format(date);
+        
+        // case 1: password attempt that fails password restrictions
+        switch (attemptValue) {
+            case 1:
+                {
+                    String event = "NOTICE";
+                    String description = name + " submitted an invalid password.";
+                    sqlite.addLogs(event, name, description , strDate);
+                    break;
+                }
+            case 2:
+                {
+                    String event = "NOTICE";
+                    String description = name + " submitted the wrong password.";
+                    sqlite.addLogs(event, name, description , strDate);
+                    break;
+                }
+            case 3:
+                {
+                    String event = "WARNING";
+                    String description = name + " exceeded the number of invalid attempts. Account is now locked.";
+                    sqlite.addLogs(event, name, description , strDate);
+                    break;
+                }
+            default:
+                break;
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -242,10 +275,18 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         String submittedUsername = usernameFld.getText();
-        String submittedPassword = String.valueOf(passwordFld.getPassword());  
+        String submittedPassword = String.valueOf(passwordFld.getPassword()); 
+        
+        // rules for inputs
+        String usernameRules = "[a-zA-Z0-9]*";
+        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
         
         if (submittedUsername.equals("") || submittedPassword.equals(""))
             logInErrorMsg.setText("Login Failed. All fields must not be empty.");
+        
+        if (!submittedUsername.matches(usernameRules)){
+            logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
+        }
     
         // Validation
         ArrayList<User> users = sqlite.getUsers();
@@ -267,6 +308,17 @@ public class Login extends javax.swing.JPanel {
                     logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
                     break;
                 }
+                
+                if (!submittedPassword.matches(passwordRules) && invalidAttempts < 3){
+                    // logging for valid usernames with password attempts that fail password restrictions
+                    logAttempt(name, 1);
+                    
+                    usernameFld.setText("");
+                    passwordFld.setText("");
+                    logInErrorMsg.setText("Login Failed. Invalid Username or Password");
+                    invalidAttempts += 1;
+                    break;
+                }
 
                 boolean verifiedPw = PasswordHashing.verifyPassword(submittedPassword, pw, salt);
                 
@@ -276,15 +328,8 @@ public class Login extends javax.swing.JPanel {
                     logInErrorMsg.setText("");
                     frame.mainNav();
                 } else if (!verifiedPw && invalidAttempts < 3){
-                    
                     // logging for invalid passwords
-                    String event = "NOTICE";
-                    String description = name + " submitted the wrong password.";
-                    Date date = new Date();  
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
-                    String strDate = formatter.format(date); 
-                    sqlite.addLogs(event, name, description , strDate);
-                    //System.out.println(strDate);
+                    logAttempt(name, 2);
                     
                     usernameFld.setText("");
                     passwordFld.setText("");
@@ -292,14 +337,8 @@ public class Login extends javax.swing.JPanel {
                     invalidAttempts += 1;
                     break;
                 } else if (invalidAttempts == 3){
-                    
                     // logging for locked accounts
-                    String event = "WARNING";
-                    String description = name + " exceeded the number of invalid attempts. Account is now locked.";
-                    Date date = new Date();  
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
-                    String strDate = formatter.format(date); 
-                    sqlite.addLogs(event, name, description , strDate);
+                    logAttempt(name, 3);
                     
                     usernameFld.setText("");
                     passwordFld.setText("");

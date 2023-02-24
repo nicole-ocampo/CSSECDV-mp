@@ -7,6 +7,7 @@ import Model.User;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -153,99 +154,141 @@ public class SQLite {
         }
     }
     
+    // changed to prepared statement
     public void addHistory(String username, String name, int stock, String timestamp) {
-        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES('" + username + "','" + name + "','" + stock + "','" + timestamp + "')";
-        
+        //String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES('" + username + "','" + name + "','" + stock + "','" + timestamp + "')";
+        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES(?,?,?,?)";
+
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, name);
+            pstmt.setInt(3, stock);
+            pstmt.setString(4, timestamp);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
     }
     
+    // changed to prepared statement
     public void addLogs(String event, String username, String desc, String timestamp) {
-        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
-        
+        //String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
+        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES(?,?,?,?)";
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, event);
+            pstmt.setString(2, username);
+            pstmt.setString(3, desc);
+            pstmt.setString(4, timestamp);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
     }
     
+    // changed to prepared statement
     public void addProduct(String name, int stock, double price) {
-        String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
+        //String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
+        String sql = "INSERT INTO product(name,stock,price) VALUES(?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setInt(2, stock);
+            pstmt.setDouble(3, price);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
     }
     
+    // changed to prepared statement
     public void addUser(String username, String password, String salt, String sq1, String sq2, String sq3, String saltsq1, String saltsq2, String saltsq3) {
-        String sql = "INSERT INTO users(username,password,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + salt + "','" + sq1 + "','"  + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
+        //String sql = "INSERT INTO users(username,password,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + salt + "','" + sq1 + "','"  + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
+        String sql = "INSERT INTO users(username,password,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES(?,?,?,?,?,?,?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
             
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
+            // Prepared Statement
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setString(3, salt);
+            pstmt.setString(4, sq1);
+            pstmt.setString(5, sq2);
+            pstmt.setString(6, sq3);
+            pstmt.setString(7, saltsq1);
+            pstmt.setString(8, saltsq2);
+            pstmt.setString(9, saltsq3);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
     }
     
+    // changed to prepared statement
     public void updateLockedUser(String username){
-        String sql = "UPDATE users "
-                + "SET role = 1, "
-                + "locked = 1 "
-                + "WHERE username = '" + username 
-                + "';";
+        //String sql = "UPDATE users "
+        //        + "SET role = 1, "
+        //        + "locked = 1 "
+        //        + "WHERE username = '" + username 
+        //        + "';";
+        String sql = "UPDATE users SET role=1, locked = 1 WHERE username=?";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
             
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
     }
     
+    // changed to prepared statement
     public void updateUnlockUser(String username){
-        String sql = "UPDATE users "
-                + "SET role = 2, "
-                + "locked = 0 "
-                + "WHERE username = '" + username 
-                + "';";
+        //String sql = "UPDATE users "
+        //        + "SET role = 2, "
+        //        + "locked = 0 "
+        //        + "WHERE username = '" + username 
+        //        + "';";
+        String sql = "UPDATE users SET role=2, locked = 0 WHERE username=?";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
             
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
     }
     
+    // changed to prepared statement
     public void updatePassword(String pw, String salt, String username){
-        String sql = "UPDATE users "
-                + "SET password = '" + pw + "'"
-                + ", salt = '" + salt + "'"
-                + "WHERE username = '" + username 
-                + "';";
-        
+        String sql = "UPDATE users SET password=?, salt=? WHERE username=?";
+
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, pw);
+            pstmt.setString(2, salt);
+            pstmt.setString(3, username);
+            pstmt.executeUpdate();
             
         } catch (Exception ex) {
             System.out.print(ex);
@@ -368,13 +411,28 @@ public class SQLite {
         return user;
     }
 
-    
+    // changed to prepared statement
     public void addUser(String username, String password, int role, String salt, String sq1, String sq2, String sq3, String saltsq1, String saltsq2, String saltsq3) {
-        String sql = "INSERT INTO users(username,password,role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + role + "','" + salt + "','" + sq1 + "','" + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
+        // String sql = "INSERT INTO users(username,password,role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + role + "','" + salt + "','" + sq1 + "','" + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
+        String sql = "INSERT INTO users(username,password,role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES(?,?,?,?,?,?,?,?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            
+            // Prepared Statement
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setInt(3, role);
+            pstmt.setString(4, salt);
+            pstmt.setString(5, sq1);
+            pstmt.setString(6, sq2);
+            pstmt.setString(7, sq3);
+            pstmt.setString(8, saltsq1);
+            pstmt.setString(9, saltsq2);
+            pstmt.setString(10, saltsq3);
+            pstmt.executeUpdate();
             System.out.println("Sample User Added");
         } catch (Exception ex) {
             System.out.print(ex);
