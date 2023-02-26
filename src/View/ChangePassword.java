@@ -123,6 +123,8 @@ public class ChangePassword extends javax.swing.JPanel {
         String submittedconfPw = String.valueOf(confchangeFld.getPassword());
         User user = sqlite.getUserWhere(currentUser);
         
+        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])([?=.*?^<])([?=.*?^>]).{8,}$";
+        
         boolean requirementsClear = false;
         
         if (submittedPw.equals("") || submittedconfPw.equals(""))
@@ -135,7 +137,7 @@ public class ChangePassword extends javax.swing.JPanel {
             }
             
             // Implement password policies from register
-            else if(!submittedPw.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")){
+            else if(!submittedPw.matches(passwordRules)){
                 requirementsClear = false;
                 changeErrorMsg.setText("Change Password Failed. Password must be at least 8 characters and contain at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, and at least 1 special character."); 
             }

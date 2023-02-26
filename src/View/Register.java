@@ -182,7 +182,7 @@ public class Register extends javax.swing.JPanel {
         
         // rules for inputs
         String usernameRules = "[a-zA-Z0-9]*";
-        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])([?=.*?^<])([?=.*?^>]).{8,}$";
         String sqRules = "[a-zA-Z0-9]*";
         
         boolean requirementsClear = false;
