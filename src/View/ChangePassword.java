@@ -123,7 +123,7 @@ public class ChangePassword extends javax.swing.JPanel {
         String submittedconfPw = String.valueOf(confchangeFld.getPassword());
         User user = sqlite.getUserWhere(currentUser);
         
-        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])([?=.*?^<])([?=.*?^>]).{8,}$";
+        String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])[a-zA-Z0-9#?!@$%^&*-]{8,}$";
         
         boolean requirementsClear = false;
         
