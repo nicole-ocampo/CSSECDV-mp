@@ -33,3 +33,28 @@ Hello12!
 manila
 lily
 delacruz
+
+
+dummy4
+Password2!
+Manila
+Manila
+Manila
+
+dummy5 -- locked
+Password1!
+Manila
+Manila
+Manila
+
+dummy6
+Password1!
+Manila
+Manila
+Manila
+
+dummy7 -- locked
+Password1!
+Manila
+Manila
+Manila
