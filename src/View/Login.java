@@ -281,12 +281,6 @@ public class Login extends javax.swing.JPanel {
         String usernameRules = "[a-zA-Z0-9]*";
         String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])[a-zA-Z0-9#?!@$%^&*-]{8,}$";
         
-        if (submittedUsername.equals("") || submittedPassword.equals(""))
-            logInErrorMsg.setText("Login Failed. All fields must not be empty.");
-        
-        if (!submittedUsername.matches(usernameRules)){
-            logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
-        }
     
         // Validation
         ArrayList<User> users = sqlite.getUsers();
@@ -349,6 +343,17 @@ public class Login extends javax.swing.JPanel {
                     break;
                 }
             }
+            
+        }
+        
+        if (submittedUsername.equals("") || submittedPassword.equals(""))
+            logInErrorMsg.setText("Login Failed. All fields must not be empty.");
+        else if (!submittedUsername.matches(usernameRules)){
+            logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
+        } else {
+            usernameFld.setText("");
+            passwordFld.setText("");
+            logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
         }
 
     }//GEN-LAST:event_loginBtnActionPerformed
