@@ -8,6 +8,9 @@ import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
 
+    public int role = 0;
+    public String username;
+    
     public Frame() {
         initComponents();
     }
@@ -255,6 +258,45 @@ public class Frame extends javax.swing.JFrame {
         Content.add(clientHomePnl, "clientHomePnl");
         
         this.setVisible(true);
+    }
+    
+    public void setUp(String username, int role){
+        this.username = username;
+        this.role = role;
+        frameView.show(Container, "homePnl");
+        
+        if (this.role == 2){
+            adminBtn.setVisible(false);
+            managerBtn.setVisible(false);
+            staffBtn.setVisible(false);
+            clientBtn.setVisible(false);
+            clientHomePnl.showPnl("home");
+            clientHomePnl.setUsername(this.username);
+            contentView.show(Content, "clientHomePnl");
+        } else if(this.role == 3){
+            adminBtn.setVisible(false);
+            managerBtn.setVisible(false);
+            staffBtn.setVisible(false);
+            clientBtn.setVisible(false);
+            staffHomePnl.showPnl("home");
+            staffHomePnl.setUsername(this.username);
+            contentView.show(Content, "staffHomePnl");
+        } else if(this.role == 4){
+            adminBtn.setVisible(false);
+            managerBtn.setVisible(false);
+            staffBtn.setVisible(false);
+            clientBtn.setVisible(false);
+            managerHomePnl.showPnl("home");
+            contentView.show(Content, "managerHomePnl");
+        } else if(this.role == 5){
+            adminBtn.setVisible(false);
+            managerBtn.setVisible(false);
+            staffBtn.setVisible(false);
+            clientBtn.setVisible(false);
+            adminHomePnl.showPnl("home");
+            contentView.show(Content, "adminHomePnl");
+        }
+            
     }
     
     public void mainNav(){

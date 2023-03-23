@@ -86,6 +86,7 @@ public class SQLite {
             + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + " username TEXT NOT NULL UNIQUE,\n"
             + " password TEXT NOT NULL,\n"
+            + " origRole INTEGER DEFAULT 2, \n"
             + " role INTEGER DEFAULT 2,\n"
             + " salt TEXT NOT NULL, \n"
             + " SQ1 TEXT NOT NULL, \n"
@@ -316,6 +317,27 @@ public class SQLite {
         return histories;
     }
     
+    public ArrayList<History> getUserHistory(String username){
+        String sql = "SELECT id, username, name, stock, timestamp FROM history WHERE username ='" + username + "';";
+        ArrayList<History> histories = new ArrayList<History>();
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+            
+            while (rs.next()) {
+                histories.add(new History(rs.getInt("id"),
+                                   rs.getString("username"),
+                                   rs.getString("name"),
+                                   rs.getInt("stock"),
+                                   rs.getString("timestamp")));
+            }
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+        return histories;
+    }
+    
     public ArrayList<Logs> getLogs(){
         String sql = "SELECT id, event, username, desc, timestamp FROM logs";
         ArrayList<Logs> logs = new ArrayList<Logs>();
@@ -336,6 +358,29 @@ public class SQLite {
         }
         return logs;
     }
+    
+    public void purchaseProduct(int new_stocks, String name){
+        // Step 1: Update stocks
+        //String sql = "UPDATE product "
+        //        + "SET stock =, " 
+        //        + "WHERE name = '" + product_name
+        //        + "';";
+        String sql = "UPDATE product SET stock=? WHERE name=?";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, new_stocks);
+            pstmt.setString(2, name);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+      
+    }
+    
     
     public ArrayList<Product> getProduct(){
         String sql = "SELECT id, name, stock, price FROM product";
@@ -450,7 +495,7 @@ public class SQLite {
             System.out.print(ex);
         }
     }
-    
+
     public Product getProduct(String name){
         String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
         Product product = null;
@@ -465,4 +510,35 @@ public class SQLite {
         }
         return product;
     }
+    
+    public void updateProduct(int id, String name, int stock, double price){
+        String sql = "UPDATE product SET name=?, stock=?, price=? WHERE id=?";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setInt(2, stock);
+            pstmt.setDouble(3, price);
+            pstmt.setInt(4, id);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void deleteProduct(int id){
+        String sql = "DELETE FROM product WHERE id=?";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
 }

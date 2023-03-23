@@ -27,10 +27,10 @@ public class Login extends javax.swing.JPanel {
     public void init(SQLite sqlite){
         this.sqlite = sqlite;
         
-        // Add sample users      
+//        // Add sample users      
 //        // admin
 //        String salt = PasswordHashing.getSaltvalue(30);
-//        String hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        String hashedPw = PasswordHashing.generateSecurePassword("Hello12!", salt);
 //        
 //        String saltSq1 = PasswordHashing.getSaltvalue(30);
 //        String hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
@@ -45,7 +45,7 @@ public class Login extends javax.swing.JPanel {
 //
 //        // manager
 //        salt = PasswordHashing.getSaltvalue(30);
-//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        hashedPw = PasswordHashing.generateSecurePassword("Hello12!", salt);
 //        
 //        saltSq1 = PasswordHashing.getSaltvalue(30);
 //        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
@@ -60,7 +60,7 @@ public class Login extends javax.swing.JPanel {
 //
 //        // staff
 //        salt = PasswordHashing.getSaltvalue(30);
-//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        hashedPw = PasswordHashing.generateSecurePassword("Hello12!", salt);
 //        
 //        saltSq1 = PasswordHashing.getSaltvalue(30);
 //        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
@@ -76,7 +76,7 @@ public class Login extends javax.swing.JPanel {
 //        
 //        // client1
 //        salt = PasswordHashing.getSaltvalue(30);
-//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        hashedPw = PasswordHashing.generateSecurePassword("Hello12!", salt);
 //        
 //        saltSq1 = PasswordHashing.getSaltvalue(30);
 //        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
@@ -92,7 +92,7 @@ public class Login extends javax.swing.JPanel {
 //
 //        // client2
 //        salt = PasswordHashing.getSaltvalue(30);
-//        hashedPw = PasswordHashing.generateSecurePassword("qwerty1234", salt);
+//        hashedPw = PasswordHashing.generateSecurePassword("Hello12!", salt);
 //        
 //        saltSq1 = PasswordHashing.getSaltvalue(30);
 //        hashedSq1 = PasswordHashing.generateSecurePassword("manila", saltSq1);
@@ -104,7 +104,6 @@ public class Login extends javax.swing.JPanel {
 //        hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
 //        
 //        sqlite.addUser("client2", hashedPw, 2, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
-
 
         // Get current users
         ArrayList<User> users = sqlite.getUsers();
@@ -288,6 +287,7 @@ public class Login extends javax.swing.JPanel {
             String name = users.get(nCtr).getUsername();
             String pw = users.get(nCtr).getPassword();
             String salt = users.get(nCtr).getSalt();
+            int user_role = users.get(nCtr).getRole();
             int lockedValue = users.get(nCtr).getLocked();
             
             if (submittedUsername.equals("") || submittedPassword.equals("")){
@@ -320,7 +320,8 @@ public class Login extends javax.swing.JPanel {
                     usernameFld.setText("");
                     passwordFld.setText("");
                     logInErrorMsg.setText("");
-                    frame.mainNav();
+                    frame.setUp(name, user_role);
+                    
                 } else if (!verifiedPw && invalidAttempts < 3){
                     // logging for invalid passwords
                     logAttempt(name, 2);
