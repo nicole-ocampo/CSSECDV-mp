@@ -1,9 +1,7 @@
 package View;
 
 import Controller.Main;
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -303,6 +301,11 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "homePnl");
     }
     
+    public void logOut(){
+        loginPnl.reset();
+        frameView.show(Container, "loginPnl");
+    }
+    
     public void loginNav(){
         loginPnl.reset();
         frameView.show(Container, "loginPnl");
@@ -334,7 +337,7 @@ public class Frame extends javax.swing.JFrame {
         loginPnl.changeSuccess();
         frameView.show(Container, "loginPnl");
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;
