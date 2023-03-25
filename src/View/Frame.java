@@ -2,6 +2,7 @@ package View;
 
 import Controller.Main;
 import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -304,8 +305,11 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void logOut(){
-        loginPnl.reset();
-        frameView.show(Container, "loginPnl");
+        int result = JOptionPane.showConfirmDialog(null, "Logged out due to inactivity. Please log in again.", "INACTIVE SESSION", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+        if (result == JOptionPane.OK_OPTION ){
+            loginPnl.reset();
+            frameView.show(Container, "loginPnl");
+        }  
     }
     
     public void loginNav(){
