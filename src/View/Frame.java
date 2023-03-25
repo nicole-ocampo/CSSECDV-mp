@@ -285,6 +285,7 @@ public class Frame extends javax.swing.JFrame {
             staffBtn.setVisible(false);
             clientBtn.setVisible(false);
             managerHomePnl.showPnl("home");
+            managerHomePnl.setUsername(this.username);
             contentView.show(Content, "managerHomePnl");
         } else if(this.role == 5){
             adminBtn.setVisible(false);

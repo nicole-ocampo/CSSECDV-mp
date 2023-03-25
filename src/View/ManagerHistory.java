@@ -17,13 +17,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author beepxD
  */
-public class UserHistory extends javax.swing.JPanel {
+public class ManagerHistory extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
-    public String username;
     
-    public UserHistory(SQLite sqlite) {
+    public ManagerHistory(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
@@ -40,16 +39,14 @@ public class UserHistory extends javax.swing.JPanel {
 //        reportBtn.setVisible(false);
     }
 
-    public void init(String username){
+    public void init(){
 //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
         
-        this.username = username;
-        
 //      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getUserHistory(this.username);
+        ArrayList<History> history = sqlite.getHistory();
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
             Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
@@ -118,7 +115,7 @@ public class UserHistory extends javax.swing.JPanel {
         }
 
         searchBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        searchBtn.setText("SEARCH PRODUCT");
+        searchBtn.setText("SEARCH USERNAME OR PRODUCT");
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchBtnActionPerformed(evt);
@@ -161,31 +158,40 @@ public class UserHistory extends javax.swing.JPanel {
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
         JTextField searchFld = new JTextField("0");
-        designer(searchFld, "SEARCH PRODUCT");
+        designer(searchFld, "SEARCH USERNAME OR PRODUCT");
 
         Object[] message = {
             searchFld
         };
 
         int result = JOptionPane.showConfirmDialog(null, message, "SEARCH HISTORY", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
-        String input_search = searchFld.getText();
-                
-        if(!input_search.matches("^[a-zA-Z0-9]*$"))
+        
+        String searchString = searchFld.getText();
+        boolean searchFlag = false;
+        String stringRules = "^[a-zA-Z0-9]*$";
+        
+        if(searchString.equalsIgnoreCase("")){
+            JOptionPane.showConfirmDialog(null, "Input must not be empty.", "ERROR", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+        } else if (!searchString.matches(stringRules)){
             JOptionPane.showConfirmDialog(null, "Input must be alphanumeric only.", "ERROR", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-        else if (result == JOptionPane.OK_OPTION) {
+        } else {
+            searchFlag = true;
+        }
+        
+        if (result == JOptionPane.OK_OPTION && searchFlag == true) {
 //          CLEAR TABLE
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
             }
+
 //          LOAD CONTENTS
-            ArrayList<History> history = sqlite.getUserHistory(this.username);
+            ArrayList<History> history = sqlite.getHistory();
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
-
-                // ONLY ABLE TO SEARCH PRODUCT
-                if(searchFld.getText().toLowerCase().contains(history.get(nCtr).getName().toLowerCase()) || 
+                if(searchFld.getText().toLowerCase().contains(history.get(nCtr).getUsername().toLowerCase()) || 
+                   history.get(nCtr).getUsername().contains(searchFld.getText()) || 
+                   searchFld.getText().toLowerCase().contains(history.get(nCtr).getName().toLowerCase()) || 
                    history.get(nCtr).getName().contains(searchFld.getText())){
-
+                
                     Product product = sqlite.getProduct(history.get(nCtr).getName());
                     tableModel.addRow(new Object[]{
                         history.get(nCtr).getUsername(), 
@@ -196,13 +202,12 @@ public class UserHistory extends javax.swing.JPanel {
                         history.get(nCtr).getTimestamp()
                     });
                 }
-                
             }
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 
     private void reloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadBtnActionPerformed
-        init(this.username);
+        init();
     }//GEN-LAST:event_reloadBtnActionPerformed
 
 

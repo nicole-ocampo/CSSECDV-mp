@@ -3,10 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Nicole%20Ocampo/Desktop/School/Term%202/CSSECDV/CSSECDV%20MP/src/View/Frame.java</file>
-            <file>file:/C:/Users/Nicole%20Ocampo/Desktop/School/Term%202/CSSECDV/CSSECDV%20MP/src/Controller/SQLite.java</file>
-            <file>file:/C:/Users/Nicole%20Ocampo/Desktop/School/Term%202/CSSECDV/CSSECDV%20MP/src/View/Login.java</file>
-            <file>file:/C:/Users/Nicole%20Ocampo/Desktop/School/Term%202/CSSECDV/CSSECDV%20MP/src/Controller/Main.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/Login.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/Model/User.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/Model/History.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/Controller/Main.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/Controller/SQLite.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/Model/Product.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/MgmtHistory.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/ChangePassword.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/ClientHome.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/Frame.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/MgmtProduct.java</file>
+            <file>file:/C:/Users/pioqu/Documents/GitHub/CSSECDV-mp/src/View/AdminHome.java</file>
         </group>
     </open-files>
 </project-private>
