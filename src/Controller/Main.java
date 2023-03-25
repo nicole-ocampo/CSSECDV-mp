@@ -29,7 +29,7 @@ public class Main {
         Frame frame = new Frame();
         frame.init(this);
       
-        // Session management (5 seconds of inactivity) -- currently changed to 2 minutes
+        // Session management (2 minutes / 120000ms of inactivity)
         Timer timer = new Timer(120000, new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {

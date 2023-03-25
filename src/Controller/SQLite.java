@@ -298,14 +298,15 @@ public class SQLite {
     }
     
     public void updateUserRole(int role, String username){
-        String sql = "UPDATE users SET role=? WHERE username=?";
+        String sql = "UPDATE users SET role=?, origRole=? WHERE username=?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
             //Statement stmt = conn.createStatement()){
             //stmt.execute(sql);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, role);
-            pstmt.setString(2, username);
+            pstmt.setInt(2, role);
+            pstmt.setString(3, username);
             pstmt.executeUpdate();
             
         } catch (Exception ex) {
@@ -577,5 +578,7 @@ public class SQLite {
             System.out.print(ex);
         }
     }
+    
+
     
 }

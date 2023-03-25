@@ -305,11 +305,11 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void logOut(){
-        int result = JOptionPane.showConfirmDialog(null, "Logged out due to inactivity. Please log in again.", "INACTIVE SESSION", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-        if (result == JOptionPane.OK_OPTION ){
-            loginPnl.reset();
-            frameView.show(Container, "loginPnl");
-        }  
+        //int result = JOptionPane.showConfirmDialog(null, "Logged out due to inactivity. Please log in again.", "INACTIVE SESSION", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+        loginPnl.reset();
+        loginPnl.setErrorMsg("Logged out due to inactivity. Please log in again.");
+        frameView.show(Container, "loginPnl");
+        
     }
     
     public void loginNav(){

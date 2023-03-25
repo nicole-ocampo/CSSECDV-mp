@@ -104,33 +104,16 @@ public class Login extends javax.swing.JPanel {
 //        hashedSq3 = PasswordHashing.generateSecurePassword("delacruz", saltSq3);
 //        
 //        sqlite.addUser("client2", hashedPw, 2, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
-
-        // Get current users
-        ArrayList<User> users = sqlite.getUsers();
-        for(int nCtr = 0; nCtr < users.size(); nCtr++){
-            String name = users.get(nCtr).getUsername();
-            String pw = users.get(nCtr).getPassword();
-            String sq1 = users.get(nCtr).getSq1();
-            String sq2 = users.get(nCtr).getSq2();
-            String sq3 = users.get(nCtr).getSq3();
-            
-            int lockedValue = users.get(nCtr).getLocked();
-            
-            System.out.println(name);
-            System.out.println(pw);
-            System.out.println(sq1);
-            System.out.println(sq2);
-            System.out.println(sq3);
-            System.out.println(lockedValue);
-        
-            System.out.println("");
-        }
     }
     
     public void reset(){
         usernameFld.setText("");
         passwordFld.setText("");
         logInErrorMsg.setText("");
+    }
+    
+    public void setErrorMsg(String text){
+        logInErrorMsg.setText(text);
     }
     
     public void registerSuccess(){
@@ -298,11 +281,13 @@ public class Login extends javax.swing.JPanel {
                 if (lockedValue == 1){
                     usernameFld.setText("");
                     passwordFld.setText("");
-                    logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
+                    logInErrorMsg.setText("Account is currently locked.");
                     break;
                 }
                 
-                if (!submittedPassword.matches(passwordRules) && invalidAttempts < 3){
+                
+              
+                if (!submittedPassword.matches(passwordRules) && !submittedUsername.matches(usernameRules) && invalidAttempts < 3){
                     // logging for valid usernames with password attempts that fail password restrictions
                     logAttempt(name, 1);
                     
@@ -345,17 +330,6 @@ public class Login extends javax.swing.JPanel {
             }
             
         }
-        
-        if (submittedUsername.equals("") || submittedPassword.equals(""))
-            logInErrorMsg.setText("Login Failed. All fields must not be empty.");
-        else if (!submittedUsername.matches(usernameRules)){
-            logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
-        } else {
-            usernameFld.setText("");
-            passwordFld.setText("");
-            logInErrorMsg.setText("Login Failed. Invalid Username or Password.");
-        }
-
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
