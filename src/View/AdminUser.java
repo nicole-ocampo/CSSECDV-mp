@@ -219,7 +219,7 @@ public class AdminUser extends javax.swing.JPanel {
                 String strDate = formatter.format(date);
 
                 String event = "NOTICE";
-                String description = "Admin " + "updated " + username +"'s role to " + roleString + ".";
+                String description = "Admin updated " + username +"'s role to " + roleString + ".";
                 sqlite.addLogs(event, "admin", description , strDate);
             }
             
@@ -232,8 +232,23 @@ public class AdminUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
+                String username = String.valueOf(tableModel.getValueAt(table.getSelectedRow(), 0));
+                
+                // delete user
+                sqlite.removeUser(username);
+                
+                // log user deletion
+                Date date = new Date();  
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+                String strDate = formatter.format(date);
+
+                String event = "NOTICE";
+                String description = "Admin deleted " + username +"'s account.";
+                sqlite.addLogs(event, "admin", description , strDate);
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
             }
+            
+            init();
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
