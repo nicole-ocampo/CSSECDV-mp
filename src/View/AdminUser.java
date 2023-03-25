@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.PasswordHashing;
 import Controller.SQLite;
 import Model.User;
 import java.text.SimpleDateFormat;
@@ -308,9 +309,49 @@ public class AdminUser extends javax.swing.JPanel {
 
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
+            String username = String.valueOf(tableModel.getValueAt(table.getSelectedRow(), 0));
+            String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])[a-zA-Z0-9#?!@$%^&*-]{8,}$";
+            String passwordString = password.getText();
+            String confpassString = confpass.getText();
+            boolean requirementsClear = false;
+            
+            User user = sqlite.getUserWhere(username);
+            
             if (result == JOptionPane.OK_OPTION) {
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
+                //System.out.println(password.getText());
+                //System.out.println(confpass.getText());
+                
+                // check field inputs
+                if (passwordString.equals("") || confpassString.equals(""))
+                    JOptionPane.showConfirmDialog(null, "Change password failed. All fields must not be empty.", "ERROR", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                else {
+                    if (!passwordString.equals(confpassString)){
+                        JOptionPane.showConfirmDialog(null, "Change password failed. Inputs do not match.", "ERROR", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                    } else if (!passwordString.matches(passwordRules)){
+                        JOptionPane.showConfirmDialog(null, "Change password failed. Invalid password.", "ERROR", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                    } else {
+                        requirementsClear = true;
+                    }
+                }
+                
+                // change password
+                if (requirementsClear){
+                    String salt = PasswordHashing.getSaltvalue(30);
+                    String hashedPw = PasswordHashing.generateSecurePassword(passwordString, salt);
+
+                    sqlite.updatePassword(hashedPw, salt, username);
+
+                    Date date = new Date();  
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+                    String strDate = formatter.format(date);
+
+                    // log password change
+                    String event = "NOTICE";
+                    String description = "Admin updated "+ username + "'s password.";
+                    sqlite.addLogs(event, "admin", description , strDate);
+
+                    init();
+                }
             }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
