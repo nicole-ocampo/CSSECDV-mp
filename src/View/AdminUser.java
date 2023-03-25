@@ -27,6 +27,7 @@ public class AdminUser extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public String adminUsername;
     
     public AdminUser(SQLite sqlite) {
         initComponents();
@@ -41,11 +42,13 @@ public class AdminUser extends javax.swing.JPanel {
 //        chgpassBtn.setVisible(false);
     }
     
-    public void init(){
+    public void init(String username){
         //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
+        
+        this.adminUsername = username;
         
 //      LOAD CONTENTS
         ArrayList<User> users = sqlite.getUsers();
@@ -221,10 +224,10 @@ public class AdminUser extends javax.swing.JPanel {
 
                 String event = "NOTICE";
                 String description = "Admin updated " + username +"'s role to " + roleString + ".";
-                sqlite.addLogs(event, "admin", description , strDate);
+                sqlite.addLogs(event, this.adminUsername, description , strDate);
             }
             
-            init();
+            init(this.adminUsername);
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
@@ -246,11 +249,11 @@ public class AdminUser extends javax.swing.JPanel {
 
                 String event = "NOTICE";
                 String description = "Admin deleted " + username +"'s account.";
-                sqlite.addLogs(event, "admin", description , strDate);
+                sqlite.addLogs(event, this.adminUsername, description , strDate);
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
             }
             
-            init();
+            init(this.adminUsername);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
@@ -281,17 +284,17 @@ public class AdminUser extends javax.swing.JPanel {
                     // log account lock
                     String event = "NOTICE";
                     String description = "Admin locked " + username +"'s account.";
-                    sqlite.addLogs(event, "admin", description , strDate);
+                    sqlite.addLogs(event, this.adminUsername, description , strDate);
                 } else if (state.equalsIgnoreCase("unlock")){
                     sqlite.updateUnlockUser(origRole, username);
                     
                     // log account unlock
                     String event = "NOTICE";
                     String description = "Admin unlocked " + username +"'s account.";
-                    sqlite.addLogs(event, "admin", description , strDate);
+                    sqlite.addLogs(event, this.adminUsername, description , strDate);
                 }
             
-                init();
+                init(this.adminUsername);
             }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
@@ -348,9 +351,9 @@ public class AdminUser extends javax.swing.JPanel {
                     // log password change
                     String event = "NOTICE";
                     String description = "Admin updated "+ username + "'s password.";
-                    sqlite.addLogs(event, "admin", description , strDate);
+                    sqlite.addLogs(event, this.adminUsername, description , strDate);
 
-                    init();
+                    init(this.adminUsername);
                 }
             }
         }

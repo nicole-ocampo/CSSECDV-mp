@@ -21,8 +21,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AdminHome extends javax.swing.JPanel {
 
-    public MgmtLogs mgmtLogs;
+    public AdminLogs adminLogs;
     public AdminUser adminUser;
+    public String username;
     
     private CardLayout contentView = new CardLayout();
     
@@ -31,13 +32,13 @@ public class AdminHome extends javax.swing.JPanel {
     }
     
     public void init(SQLite sqlite){
-        mgmtLogs = new MgmtLogs(sqlite);
+        adminLogs = new AdminLogs(sqlite);
         adminUser = new AdminUser(sqlite);
         
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME ADMIN!", new java.awt.Color(51, 153, 255)), "home");
         Content.add(this.adminUser, "mgmtUser");
-        Content.add(this.mgmtLogs, "mgmtLogs");
+        Content.add(this.adminLogs, "mgmtLogs");
         
 //        UNCOMMENT TO DISABLE BUTTONS
 //        historyBtn.setVisible(false);
@@ -48,6 +49,10 @@ public class AdminHome extends javax.swing.JPanel {
     
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
+    }
+    
+    public void setUsername(String username){
+        this.username=username;
     }
 
     /**
@@ -122,13 +127,13 @@ public class AdminHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void usersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersBtnActionPerformed
-        adminUser.init();
+        adminUser.init(username);
         logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtUser");
     }//GEN-LAST:event_usersBtnActionPerformed
 
     private void logsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logsBtnActionPerformed
-        mgmtLogs.init();
+        adminLogs.init(username);
         usersBtn.setForeground(Color.black);
         logsBtn.setForeground(Color.red);
         contentView.show(Content, "mgmtLogs");

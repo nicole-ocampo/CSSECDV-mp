@@ -293,6 +293,7 @@ public class Frame extends javax.swing.JFrame {
             staffBtn.setVisible(false);
             clientBtn.setVisible(false);
             adminHomePnl.showPnl("home");
+            adminHomePnl.setUsername(this.username);
             contentView.show(Content, "adminHomePnl");
         }
             
