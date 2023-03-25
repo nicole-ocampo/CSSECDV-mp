@@ -5,7 +5,9 @@ import Controller.SQLite;
 import Controller.PasswordHashing;
 
 import Model.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Register extends javax.swing.JPanel {
 
@@ -237,6 +239,7 @@ public class Register extends javax.swing.JPanel {
             // Case 7: Register successful.
             else{
                 requirementsClear = true;
+                
             }
         }
         
@@ -252,6 +255,15 @@ public class Register extends javax.swing.JPanel {
             
             String saltSq3 = PasswordHashing.getSaltvalue(30);
             String hashedSq3 = PasswordHashing.generateSecurePassword(submittedSq3, saltSq3);
+            
+            // logged account register
+            Date date = new Date();  
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+            String strDate = formatter.format(date);
+                
+            String event = "NOTICE";
+            String description = submittedUsername + " successfully created an account.";
+            sqlite.addLogs(event, submittedUsername, description , strDate);
             
             frame.registerAction(submittedUsername, hashedPw, salt, hashedSq1, hashedSq2, hashedSq3, saltSq1, saltSq2, saltSq3);
         }

@@ -258,20 +258,21 @@ public class SQLite {
     }
     
     // changed to prepared statement
-    public void updateUnlockUser(String username){
+    public void updateUnlockUser(int role, String username){
         //String sql = "UPDATE users "
         //        + "SET role = 2, "
         //        + "locked = 0 "
         //        + "WHERE username = '" + username 
         //        + "';";
-        String sql = "UPDATE users SET role=2, locked = 0 WHERE username=?";
+        String sql = "UPDATE users SET role=?, locked = 0 WHERE username=?";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             //Statement stmt = conn.createStatement()){
             //stmt.execute(sql);
             
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
+            pstmt.setInt(1, role);
+            pstmt.setString(2, username);
             pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
@@ -419,7 +420,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, password, role, salt, SQ1, SQ2, SQ3, saltSq1, saltSq2, saltSq3, locked FROM users";
+        String sql = "SELECT id, username, password, origRole, role, salt, SQ1, SQ2, SQ3, saltSq1, saltSq2, saltSq3, locked FROM users";
         ArrayList<User> users = new ArrayList<User>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -430,6 +431,7 @@ public class SQLite {
                 users.add(new User(rs.getInt("id"),
                                    rs.getString("username"),
                                    rs.getString("password"),
+                                   rs.getInt("origRole"),
                                    rs.getInt("role"),
                                    rs.getString("salt"),
                                    rs.getString("SQ1"),
@@ -445,7 +447,7 @@ public class SQLite {
     }
     
      public User getUserWhere(String currentUser){
-        String sql = "SELECT id, username, password, role, salt, SQ1, SQ2, SQ3, saltSq1, saltSq2, saltSq3, locked FROM users WHERE username ='" + currentUser + "';";
+        String sql = "SELECT id, username, password, origRole, role, salt, SQ1, SQ2, SQ3, saltSq1, saltSq2, saltSq3, locked FROM users WHERE username ='" + currentUser + "';";
         User user = null;
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -455,6 +457,7 @@ public class SQLite {
             user = new User(rs.getInt("id"),
                              rs.getString("username"),
                              rs.getString("password"),
+                             rs.getInt("origRole"),
                              rs.getInt("role"),
                              rs.getString("salt"),
                              rs.getString("SQ1"),
@@ -475,7 +478,7 @@ public class SQLite {
     // changed to prepared statement
     public void addUser(String username, String password, int role, String salt, String sq1, String sq2, String sq3, String saltsq1, String saltsq2, String saltsq3) {
         // String sql = "INSERT INTO users(username,password,role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES('" + username + "','" + password + "','" + role + "','" + salt + "','" + sq1 + "','" + sq2 + "','" + sq3 + "','" + saltsq1 + "','" + saltsq2 + "','" + saltsq3 + "')";
-        String sql = "INSERT INTO users(username,password,role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO users(username,password,origRole, role,salt,sq1,sq2,sq3,saltsq1,saltsq2,saltsq3) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             //Statement stmt = conn.createStatement()){
@@ -486,13 +489,14 @@ public class SQLite {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             pstmt.setInt(3, role);
-            pstmt.setString(4, salt);
-            pstmt.setString(5, sq1);
-            pstmt.setString(6, sq2);
-            pstmt.setString(7, sq3);
-            pstmt.setString(8, saltsq1);
-            pstmt.setString(9, saltsq2);
-            pstmt.setString(10, saltsq3);
+            pstmt.setInt(4, role);
+            pstmt.setString(5, salt);
+            pstmt.setString(6, sq1);
+            pstmt.setString(7, sq2);
+            pstmt.setString(8, sq3);
+            pstmt.setString(9, saltsq1);
+            pstmt.setString(10, saltsq2);
+            pstmt.setString(11, saltsq3);
             pstmt.executeUpdate();
             System.out.println("Sample User Added");
         } catch (Exception ex) {
@@ -509,6 +513,20 @@ public class SQLite {
             pstmt.setString(1, username);
             pstmt.executeUpdate();
             System.out.println("User " + username + " has been deleted.");
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void removeUserHistory(String username){
+        String sql = "DELETE FROM history WHERE username=?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.executeUpdate();
+            System.out.println("User history" + username + " has been deleted.");
             
         } catch (Exception ex) {
             System.out.print(ex);

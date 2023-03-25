@@ -4,6 +4,7 @@ public class User {
     private int id;
     private String username;
     private String password;
+    private int origRole;
     private int role = 2;
     private String salt;
     private String sq1;
@@ -19,10 +20,11 @@ public class User {
         this.password = password;
     }
     
-    public User(int id, String username, String password, int role, String salt, String sq1, String sq2, String sq3, String saltSq1, String saltSq2, String saltSq3, int locked){
+    public User(int id, String username, String password, int origRole, int role, String salt, String sq1, String sq2, String sq3, String saltSq1, String saltSq2, String saltSq3, int locked){
         this.id = id;
         this.username = username;
         this.password = password;
+        this.origRole = origRole;
         this.role = role;
         this.salt = salt;
         this.sq1 = sq1;
@@ -64,6 +66,14 @@ public class User {
 
     public void setRole(int role) {
         this.role = role;
+    }
+    
+    public int getorigRole() {
+        return origRole;
+    }
+
+    public void setorigRole(int origRole) {
+        this.origRole = origRole;
     }
     
     public String getSalt(){

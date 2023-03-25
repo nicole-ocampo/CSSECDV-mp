@@ -5,7 +5,9 @@ import Controller.SQLite;
 import Controller.PasswordHashing;
 
 import Model.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class ChangePassword extends javax.swing.JPanel {
@@ -122,6 +124,7 @@ public class ChangePassword extends javax.swing.JPanel {
         String submittedPw = String.valueOf(changeFld.getPassword());
         String submittedconfPw = String.valueOf(confchangeFld.getPassword());
         User user = sqlite.getUserWhere(currentUser);
+        int origRole = user.getorigRole();
         
         String passwordRules = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])[a-zA-Z0-9#?!@$%^&*-]{8,}$";
         
@@ -151,7 +154,16 @@ public class ChangePassword extends javax.swing.JPanel {
             String hashedPw = PasswordHashing.generateSecurePassword(submittedPw, salt);
             
             sqlite.updatePassword(hashedPw, salt, currentUser);
-            sqlite.updateUnlockUser(currentUser);
+            sqlite.updateUnlockUser(origRole,currentUser);
+            
+            Date date = new Date();  
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+            String strDate = formatter.format(date);
+            
+            // log account lock
+            String event = "NOTICE";
+            String description = currentUser + " updated their password.";
+            sqlite.addLogs(event, currentUser, description , strDate);
             
             frame.changePwSuccess();
         }

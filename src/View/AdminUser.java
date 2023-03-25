@@ -236,6 +236,7 @@ public class AdminUser extends javax.swing.JPanel {
                 
                 // delete user
                 sqlite.removeUser(username);
+                sqlite.removeUserHistory(username);
                 
                 // log user deletion
                 Date date = new Date();  
@@ -259,10 +260,37 @@ public class AdminUser extends javax.swing.JPanel {
                 state = "unlock";
             }
             
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "LOCK USER", JOptionPane.YES_NO_OPTION);
+            String username = String.valueOf(tableModel.getValueAt(table.getSelectedRow(), 0));
+            
+            User user = sqlite.getUserWhere(username);
+            int origRole = user.getorigRole();
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                //System.out.println(result);
+                
+                Date date = new Date();  
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
+                String strDate = formatter.format(date);
+                
+                if (state.equalsIgnoreCase("lock")){
+                    sqlite.updateLockedUser(username);
+                    
+                    // log account lock
+                    String event = "NOTICE";
+                    String description = "Admin locked " + username +"'s account.";
+                    sqlite.addLogs(event, "admin", description , strDate);
+                } else if (state.equalsIgnoreCase("unlock")){
+                    sqlite.updateUnlockUser(origRole, username);
+                    
+                    // log account unlock
+                    String event = "NOTICE";
+                    String description = "Admin unlocked " + username +"'s account.";
+                    sqlite.addLogs(event, "admin", description , strDate);
+                }
+            
+                init();
             }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
