@@ -30,6 +30,7 @@ public class Main {
         frame.init(this);
       
         // Session management (2 minutes / 120000ms of inactivity)
+        // Reference: www.java2s.com/Tutorials/Java/Swing_How_to/JFrame/Close_JFrame_after_user_inactivity.htm
         Timer timer = new Timer(120000, new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {

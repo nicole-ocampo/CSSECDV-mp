@@ -154,8 +154,7 @@ public class ChangePassword extends javax.swing.JPanel {
             String hashedPw = PasswordHashing.generateSecurePassword(submittedPw, salt);
             
             sqlite.updatePassword(hashedPw, salt, currentUser);
-            sqlite.updateUnlockUser(origRole,currentUser);
-            
+             
             Date date = new Date();  
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
             String strDate = formatter.format(date);
