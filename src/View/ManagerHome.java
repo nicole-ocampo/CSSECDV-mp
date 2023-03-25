@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 public class ManagerHome extends javax.swing.JPanel {
 
     public ManagerHistory managerHistory;
-    public MgmtProduct mgmtProduct;
+    public ManagerProduct managerProduct;
     
     public String username;
     
@@ -34,12 +34,12 @@ public class ManagerHome extends javax.swing.JPanel {
     
     public void init(SQLite sqlite){
         managerHistory = new ManagerHistory(sqlite);
-        mgmtProduct = new MgmtProduct(sqlite);
+        managerProduct = new ManagerProduct(sqlite);
     
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME MANAGER!", new java.awt.Color(153,102,255)), "home");
         Content.add(managerHistory, "mgmtHistory");
-        Content.add(mgmtProduct, "mgmtProduct");
+        Content.add(managerProduct, "mgmtProduct");
         
 //        UNCOMMENT TO DISABLE BUTTONS
 //        historyBtn.setVisible(false);
@@ -128,7 +128,7 @@ public class ManagerHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        mgmtProduct.init();
+        managerProduct.init();
         productsBtn.setForeground(Color.red);
         historyBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtProduct");

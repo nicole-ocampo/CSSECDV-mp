@@ -17,12 +17,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author beepxD
  */
-public class StaffProduct extends javax.swing.JPanel {
+public class ManagerProduct extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     
-    public StaffProduct(SQLite sqlite) {
+    public ManagerProduct(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
@@ -243,7 +243,7 @@ public class StaffProduct extends javax.swing.JPanel {
             boolean stocksFlag = false;
             boolean priceFlag = false;
             boolean prodTakenFlag = false;
-            
+        
             ArrayList<Product> product = sqlite.getProduct();
             for(int nCtr = 0; nCtr < product.size(); nCtr++){
                 String name = product.get(nCtr).getName();
